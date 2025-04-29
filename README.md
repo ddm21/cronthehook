@@ -206,6 +206,24 @@ All endpoints require the `X-API-KEY` header set to your `PRIVATE_API_KEY` from 
 
 ---
 
+### 5. Delete All Completed Jobs
+**DELETE** `/api/jobs/completed`
+
+Use this endpoint to clean up old completed jobs from the database.
+
+**Headers:**
+- `X-API-KEY: <your PRIVATE_API_KEY>`
+
+**Response:**
+```js
+{ 
+  "deleted_job_ids": ["uuid1", "uuid2", ...],
+  "count": 2
+}
+```
+
+---
+
 ## Worker Script
 The worker script (`worker/index.js`) should be triggered every `$WORKER_POLL_INTERVAL_SECONDS` (e.g., via PM2 cron, system cron, or Supabase Cron). It will:
 - Fetch all `pending` jobs where `scheduled_time <= now()`
@@ -232,4 +250,4 @@ curl -X POST http://localhost:3000/api/schedule \
 ---
 
 ## License
-MIT 
+MIT

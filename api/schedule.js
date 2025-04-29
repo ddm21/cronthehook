@@ -153,4 +153,29 @@ router.delete('/jobs/:id/delete', apiKeyAuth, async (req, res) => {
   }
 });
 
+// DELETE /api/jobs/completed
+router.delete('/jobs/completed', apiKeyAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('jobs')
+      .delete()
+      .eq('status', 'completed')
+      .select('id');
+      
+    if (error) {
+      console.error('Supabase delete error:', error);
+      return res.status(500).json({ error: 'Failed to delete completed jobs', details: error.message });
+    }
+
+    const deletedIds = data ? data.map(job => job.id) : [];
+    return res.json({ 
+      deleted_job_ids: deletedIds,
+      count: deletedIds.length
+    });
+  } catch (err) {
+    console.error('DELETE /api/jobs/completed error:', err);
+    return res.status(500).json({ error: 'Failed to delete completed jobs', details: err.message });
+  }
+});
+
 module.exports = router; 
