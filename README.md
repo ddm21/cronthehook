@@ -144,7 +144,7 @@ To expose your service on a custom domain with automatic HTTPS, use [Caddy](http
   -e WORKER_POLL_INTERVAL_SECONDS=60 \
   -e MAX_RETRY_ATTEMPTS=3 \
   -e PRIVATE_API_KEY=your_private_api_key_here \
-  cronthehook
+  korexdotcf/cronthehook:latest
   ```
   - The API will be available on port 3000 by default.
   - The worker will run on a schedule as defined in `.env in WORKER_POLL_INTERVAL_SECONDS`.
