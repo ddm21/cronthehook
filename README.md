@@ -40,7 +40,8 @@ A Node.js service for scheduling, managing, and executing webhook jobs using Sup
      status text not null check (status in ('pending', 'completed', 'failed')),
      retries integer not null default 0,
      last_error text,
-     created_at timestamp with time zone not null default now()
+     created_at timestamp with time zone not null default now(),
+     completed_at timestamp with time zone
    );
    ```
 

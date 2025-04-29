@@ -25,10 +25,14 @@ async function processJobs() {
           headers: { 'Content-Type': 'application/json' },
           timeout: 10000,
         });
-        // On success, mark as completed
+        // On success, mark as completed and set completed_at
         const { error: updateError } = await supabase
           .from('jobs')
-          .update({ status: 'completed', last_error: null })
+          .update({ 
+            status: 'completed', 
+            last_error: null,
+            completed_at: new Date().toISOString()
+          })
           .eq('id', job.id);
         if (updateError) {
           console.error(`Error updating job ${job.id} to completed:`, updateError);
@@ -48,6 +52,7 @@ async function processJobs() {
             retries: newRetries,
             status: failed ? 'failed' : 'pending',
             last_error: errorMsg,
+            completed_at: failed ? new Date().toISOString() : null // Set completed_at when failed, null if still pending
           })
           .eq('id', job.id);
         if (updateError) {
@@ -61,8 +66,23 @@ async function processJobs() {
   }
 }
 
+async function startWorker() {
+  console.log(`[Worker] Starting with poll interval of ${config.worker.pollIntervalSeconds} seconds`);
+  console.log(`[Worker] Connecting to Supabase at: ${config.supabase.url}`);
+  
+  const intervalMs = config.worker.pollIntervalSeconds * 1000;
+  
+  // Initial run
+  await processJobs();
+  
+  // Set up interval for subsequent runs
+  setInterval(async () => {
+    await processJobs();
+  }, intervalMs);
+}
+
 if (require.main === module) {
-  processJobs().then(() => process.exit(0)).catch((err) => {
+  startWorker().catch((err) => {
     console.error('Fatal worker error:', err);
     process.exit(1);
   });

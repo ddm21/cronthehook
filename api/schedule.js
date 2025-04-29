@@ -17,7 +17,7 @@ function isValidISODate(str) {
 
 function parseCustomDateTime(str, timezone) {
   // Expects 'dd-mm-yyyy HH:mm' and a valid IANA timezone string
-  const match = /^()-(\d{2})-(\d{4}) (\d{2}):(\d{2})$/.exec(str);
+  const match = /^(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2})$/.exec(str);
   if (!match) return null;
   const [, dd, mm, yyyy, HH, min] = match;
   // Use luxon to parse in the given timezone
