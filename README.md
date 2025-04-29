@@ -126,12 +126,28 @@ To expose your service on a custom domain with automatic HTTPS, use [Caddy](http
   ```sh
   docker build -t cronthehook .
   ```
+  or
+- **Pull the Docker image:**
+  ```sh
+  docker pull korexdotcf/cronthehook:latest
+  ```
 - **Run the container (with your .env file):**
   ```sh
   docker run -p 3000:3000 --env-file .env cronthehook
   ```
+  or
+- **Run the container (with inline env):**
+  ```sh
+  docker run -p 3000:3000 \
+  -e SUPABASE_URL=your_supabase_url_here \
+  -e SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here \
+  -e WORKER_POLL_INTERVAL_SECONDS=60 \
+  -e MAX_RETRY_ATTEMPTS=3 \
+  -e PRIVATE_API_KEY=your_private_api_key_here \
+  cronthehook
+  ```
   - The API will be available on port 3000 by default.
-  - The worker will run on a schedule as defined in `ecosystem.config.js` (every minute).
+  - The worker will run on a schedule as defined in `.env in WORKER_POLL_INTERVAL_SECONDS`.
 
 ---
 
