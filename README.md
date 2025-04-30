@@ -16,19 +16,17 @@ A Node.js service for scheduling, managing, and executing webhook jobs using Sup
 ## Environment Setup
 
 1. **Clone the repository**
+   ```
+   git clone https://github.com/ddm21/cronthehook.git
+   ```
 2. **Install dependencies:**
    ```sh
-   npm install
+   cd cronthehook && npm install
    ```
 3. **Configure environment variables:**
-   Create a `.env` file in the root directory:
-   ```env
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   WORKER_POLL_INTERVAL_SECONDS=60
-   MAX_RETRY_ATTEMPTS=3
-   PRIVATE_API_KEY=your_private_api_key
-   ```
+   
+   Copy and rename`.env.example` file to `.env`
+
 4. **Set up the jobs table in Supabase:**
    The service will create jobs in a table with this schema:
    ```sql
@@ -49,7 +47,7 @@ A Node.js service for scheduling, managing, and executing webhook jobs using Sup
 
 ## Running the Service
 
-### Local Testing / Development
+### ✅ Local Testing / Development
 
 - **Start the API server:**
   ```sh
@@ -63,90 +61,36 @@ A Node.js service for scheduling, managing, and executing webhook jobs using Sup
   ```
   This will process due jobs once. For repeated processing, see below.
 
-### Production Deployment
+### ✅ With Docker (Rrecommended for production )
 
-#### ✅ **With PM2 (recommended for Node.js apps):**
+- **Project Structure Example:**
 
-- **Install PM2 globally (if not already):**
-  ```sh
-  npm install -g pm2
-  ```
-- **Start the API server:**
-  ```sh
-  pm2 start index.js --name cronthehook-api
-  ```
-- **Run the worker on a schedule (every minute):**
-  ```sh
-  pm2 start worker/index.js --name cronthehook-worker --cron "* * * * *"
-  ```
-- **View logs and monitor:**
-  ```sh
-  pm2 logs
-  pm2 monit
-  ```
+```
+/cronthehook
+├── .env
+├── docker-compose-setup/
+│   ├── docker-compose.yml
+│   └── Caddyfile
+```
 
-#### ✅ **Expose the Service via Domain (with Caddy)**
+- **Run via Compose:**
 
-To expose your service on a custom domain with automatic HTTPS, use [Caddy](https://caddyserver.com/):
+```bash
+cd docker-compose-setup
+docker-compose up
+```
 
-- **Install Caddy (Linux)**:
-  ```bash
-  sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-  sudo apt update
-  sudo apt install caddy
-  ```
+This will:
 
-- **Create a `Caddyfile` in your project root**:
-  ```
-  yourdomain.com {
-      reverse_proxy localhost:3000
-  }
-  ```
+- Start the `cronthehook` backend with environment variables from your `.env`
+- Launch a Caddy reverse proxy server
+- Automatically provision an **HTTPS certificate** using Let's Encrypt for your domain
+- Route incoming traffic from `https://yourdomain.com` to the backend at `backend:3000`
 
-  - Replace `yourdomain.com` with your actual domain name.
-  - Replace `3000` with the port your Node.js app uses.
+> Make sure your domain points to your server’s IP (via an `A` or `CNAME` record).  
+> Set your email in the `Caddyfile` to receive cert renewal alerts.
 
-- **Start Caddy using the config**:
-  ```bash
-  sudo caddy run --config ./Caddyfile --adapter caddyfile
-  ```
-
-- **(Optional) Run Caddy as a background service**:
-  ```bash
-  sudo cp ./Caddyfile /etc/caddy/Caddyfile
-  sudo systemctl restart caddy
-  sudo systemctl enable caddy
-  ```
-
-#### ✅ **With Docker**
-
-- **Build the Docker image:**
-  ```sh
-  docker build -t cronthehook .
-  ```
-  or
-- **Pull the Docker image:**
-  ```sh
-  docker pull korexdotcf/cronthehook:latest
-  ```
-- **Run the container (with your .env file):**
-  ```sh
-   docker run -p 3000:3000 --env-file .env cronthehook
-  ```
-  or
-- **Run the container (with inline env):**
-  ```sh
-   docker run -p 3000:3000 \
-     -e SUPABASE_URL=your_supabase_url_here \
-     -e SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here \
-     -e WORKER_POLL_INTERVAL_SECONDS=60 \
-     -e MAX_RETRY_ATTEMPTS=3 \
-     -e PRIVATE_API_KEY=your_private_api_key_here \
-     korexdotcf/cronthehook:latest
-  ```
-  - The API will be available on port 3000 by default.
+  - The API will be available on port 3000 by default in testing or `https://yourdomain.com` in production.
   - The worker will run on a schedule as defined in `.env in WORKER_POLL_INTERVAL_SECONDS`.
 
 ---
