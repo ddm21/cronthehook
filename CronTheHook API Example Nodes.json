@@ -1,0 +1,155 @@
+{
+  "name": "CronTheHook API Example Nodes",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://homelab-cronthehook.4m6m9w.easypanel.host/api/schedule",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"webhook_url\": \"https://webhook.site/c0e5e216-5699-41d0-9c88-ea69c94dcde2\",\n  \"payload\": {\"menu\": {\n  \"id\": \"file\",\n  \"value\": \"File\",\n  \"popup\": {\n    \"menuitem\": [\n      {\"value\": \"New\", \"onclick\": \"CreateNewDoc()\"},\n      {\"value\": \"Open\", \"onclick\": \"OpenDoc()\"},\n      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n    ]\n  }\n}},\n  \"scheduled_time\": \"14-07-2025 23:38\",\n  \"timezone\": \"Asia/Kolkata\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "55d25603-9f2e-42ad-8c40-fa7c560c4c7a",
+      "name": "Schedule a Job",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "EHzh31ZphUnICrwO",
+          "name": "CrontheHook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://homelab-cronthehook.4m6m9w.easypanel.host/api/jobs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "0958747e-14dc-4a1e-baec-ea7c959e6bab",
+      "name": "List Jobs",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "EHzh31ZphUnICrwO",
+          "name": "CrontheHook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://homelab-cronthehook.4m6m9w.easypanel.host/api/jobs/{{ $json.id }}/delete",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "2f4f9e64-d455-4e9f-ac38-05260c106d17",
+      "name": "Delete a Job",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "EHzh31ZphUnICrwO",
+          "name": "CrontheHook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://homelab-cronthehook.4m6m9w.easypanel.host/api/jobs/completed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "id": "e0c132a9-faa7-4845-9c58-34825593d29c",
+      "name": "Delete All Completed Jobs",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "EHzh31ZphUnICrwO",
+          "name": "CrontheHook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://homelab-cronthehook.4m6m9w.easypanel.host/api/jobs/{{ $json.id }}/retry",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "b511959b-817a-4ff4-8213-0a95ec9ebe2f",
+      "name": "Retry a Job",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "EHzh31ZphUnICrwO",
+          "name": "CrontheHook"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule a Job": {
+      "main": [
+        []
+      ]
+    },
+    "List Jobs": {
+      "main": [
+        []
+      ]
+    },
+    "Delete a Job": {
+      "main": [
+        []
+      ]
+    },
+    "Retry a Job": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d8fb5a07-3ab7-419e-aff4-eaaa0fdaccb0",
+  "meta": {
+    "instanceId": "068ca8f2e17606827dc45f3c45c7c9744df679ae13dc7b161d3ca97574aa2783"
+  },
+  "id": "y4Evgcy37psnErfW",
+  "tags": []
+}
