@@ -1,4 +1,4 @@
-![Thumbnail](https://media.licdn.com/dms/image/v2/D4D22AQGWCrf__o7vYg/feedshare-shrink_2048_1536/B4DZaHrtZRHQA8-/0/1746033105945?e=1749081600&v=beta&t=UPkGW3JHLlu5A0hyV6tjoxOrq-M7NbDcjpZDfqNxA9U)
+![Thumbnail](https://i.vgy.me/Kv9FnV.jpg)
 
 # Cronthehook
 
